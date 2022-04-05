@@ -520,7 +520,7 @@ battle <-
       }
     }
     
-    if((nd==0)&(ainf + aart + atnk >0)){res <- c(res, 'A wins')}
+    if((nd==0)&(ainf + aart + atnk + absh + asub + acrs + acar + ades >0)){res <- c(res, 'A wins')}
     if((nd>0)&(na==0)){res <- c(res, 'D wins')}
     if((nd == 0)&(na <= afig + abom)){res <- c(res, 'D holds')}
     if((nd>0)&(na>0)){res <- c(res, 'stalemate')}
@@ -575,15 +575,16 @@ battle(
   Absh = 0,
   Acrs = 0,
   Ades = 0,
-  Asub = 2,
+  Asub = 3,
   Acar = 0,
-  Afig = 5,
+  Afig = 1,
   Abom = 0,
+  sacrifice.planes = F,
   
-  Dbsh = 2,
-  Dcrs = 2,
-  Ddes = 1,
-  Dsub = 0,
+  Dbsh = 1,
+  Dcrs = 0,
+  Ddes = 0,
+  Dsub = 1,
   Dcar = 0,
   Dfig = 0
 )
