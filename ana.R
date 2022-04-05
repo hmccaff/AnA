@@ -20,6 +20,9 @@ battle <-
     Absh_bbard = 0,
     Acrs_bbard = 0,
     
+    #attacker sacrifice planes to take land
+    sacrifice.planes = T,
+    
     
     Dinf = 0,
     Dart = 0,
@@ -102,7 +105,7 @@ battle <-
     
     
     na <- ainf + aart + atnk + afig + abom + absh + acrs + ades + asub + acar
-    nd <- dinf + dart + dtnk + dfig + dbom  + dbsh + dcrs + ddes + dsub + dcar
+    nd <- dinf + dart + dtnk + dfig + dbom  + dbsh + dcrs + ddes + dsub + dcar + daa
     
     #repeat rounds until at least one player has 0 units
     while( (na > 0) & (nd > 0)){
@@ -222,18 +225,29 @@ battle <-
       
       
       #defender takes losses
-      while((dbom > 0)&(ahits>0)){
-        dbom <- dbom - 1
-        ahits <- ahits -1
+      
+      #destroy AA first if necessary to preserve another unit to hold territory
+      if(ahits == nd - 1){
+        while((daa > 0)&(ahits>0)){
+          daa <- daa - 1
+          ahits <- ahits -1
+        }
       }
       while((dinf > 0)&(ahits>0)){
         dinf <- dinf - 1
         ahits <- ahits -1
       }
+      
       while((dart > 0)&(ahits>0)){
         dart <- dart - 1
         ahits <- ahits -1
       }
+      
+      while((daa > 0)&(ahits>0)){
+        daa <- daa - 1
+        ahits <- ahits -1
+      }
+      
       while((dtnk > 0)&(ahits>0)){
         dtnk <- dtnk - 1
         ahits <- ahits -1
@@ -293,6 +307,10 @@ battle <-
         ahits <- ahits -1
       }
       
+      while((dbom > 0)&(ahits>0)){
+        dbom <- dbom - 1
+        ahits <- ahits -1
+      }
       
       while((dcrs > 0)&(asubhits > 0)){
         dcrs <- dcrs - 1
@@ -341,6 +359,31 @@ battle <-
       
       
       #attacker takes losses
+      
+      #remove land units until 1 remains, then begin removing planes
+      if(sacrifice.planes & (dhits >= ainf + aart + atnk) & (dhits < na)){
+        while((ainf + aart + atnk > 1)&(ainf > 0)&(dhits>0)){
+          ainf <- ainf - 1
+          dhits <- dhits -1
+        }
+        while((ainf + aart + atnk > 1)&(aart > 0)&(dhits>0)){
+          aart <- aart - 1
+          dhits <- dhits -1
+        }
+        while((ainf + aart + atnk > 1)&(atnk > 0)&(dhits>0)){
+          atnk <- atnk - 1
+          dhits <- dhits -1
+        }
+        while((afig > 0)&(dhits>0)){
+          afig <- afig - 1
+          dhits <- dhits -1
+        }
+        while((abom > 0)&(dhits>0)){
+          abom <- abom - 1
+          dhits <- dhits -1
+        }
+      }
+      
       while((ainf > 0)&(dhits>0)){
         ainf <- ainf - 1
         dhits <- dhits -1
@@ -466,7 +509,10 @@ battle <-
       
       
       na <- ainf + aart + atnk + afig + abom + absh + acrs + ades + asub + acar
-      nd <- dinf + dart + dtnk + dfig + dbom  + dbsh + dcrs + ddes + dsub + dcar
+      nd <- dinf + dart + dtnk + dfig + dbom  + dbsh + dcrs + ddes + dsub + dcar + daa
+      
+      #AA gun cannot hold territory
+      if(nd == daa){nd <- 0}
       
       #break if only planes/subs remain
       if(((na == asub)&(nd == dfig + dbom))|((nd == dsub)&(na == afig + abom))){
@@ -474,9 +520,9 @@ battle <-
       }
     }
     
-    if((nd==0)&(na>0)){res <- c(res, 'A wins')}
+    if((nd==0)&(ainf + aart + atnk >0)){res <- c(res, 'A wins')}
     if((nd>0)&(na==0)){res <- c(res, 'D wins')}
-    if((nd==0)&(na==0)){res <- c(res, 'D holds')}
+    if((nd == 0)&(na <= afig + abom)){res <- c(res, 'D holds')}
     if((nd>0)&(na>0)){res <- c(res, 'stalemate')}
     
     rd <- c(rd, nd)
@@ -502,22 +548,25 @@ battle <-
 
 #land/air
 battle(
-  Ainf = 3,
-  Aart = 3,
-  Atnk = 1,
+  Ainf = 1,
+  Aart = 1,
+  Atnk = 0,
   Afig = 1,
-  Abom = 1,
+  Abom = 0,
   
   #amphibious
   Absh_bbard = 0,
   Acrs_bbard = 0,
   
-  Dinf = 8,
+  #attacker sacrifice planes to take land
+  sacrifice.planes = T,
+  
+  Dinf = 3,
   Dart = 0,
   Dtnk = 0,
   Dfig = 0,
   Dbom = 0,
-  Daa = 1
+  Daa = 0
 )
 
 
@@ -526,15 +575,16 @@ battle(
   Absh = 0,
   Acrs = 0,
   Ades = 0,
-  Asub = 4,
+  Asub = 2,
   Acar = 0,
-  Afig = 1,
+  Afig = 5,
   Abom = 0,
   
-  Dbsh = 1,
-  Dcrs = 0,
+  Dbsh = 2,
+  Dcrs = 2,
   Ddes = 1,
   Dsub = 0,
-  Dcar = 1,
-  Dfig = 2
+  Dcar = 0,
+  Dfig = 0
 )
+      
