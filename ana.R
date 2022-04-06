@@ -227,7 +227,7 @@ battle <-
       #defender takes losses
       
       #destroy AA first if necessary to preserve another unit to hold territory
-      if(ahits == nd - 1){
+      if(ahits == nd - daa){
         while((daa > 0)&(ahits>0)){
           daa <- daa - 1
           ahits <- ahits -1
@@ -549,9 +549,9 @@ battle <-
 #land/air
 battle(
   Ainf = 1,
-  Aart = 1,
+  Aart = 0,
   Atnk = 0,
-  Afig = 1,
+  Afig = 4,
   Abom = 0,
   
   #amphibious
@@ -561,12 +561,12 @@ battle(
   #attacker sacrifice planes to take land
   sacrifice.planes = T,
   
-  Dinf = 3,
+  Dinf = 7,
   Dart = 0,
   Dtnk = 0,
   Dfig = 0,
   Dbom = 0,
-  Daa = 0
+  Daa = 2
 )
 
 
@@ -575,16 +575,16 @@ battle(
   Absh = 0,
   Acrs = 0,
   Ades = 0,
-  Asub = 3,
+  Asub = 0,
   Acar = 0,
-  Afig = 1,
-  Abom = 0,
+  Afig = 2,
+  Abom = 1,
   sacrifice.planes = F,
   
   Dbsh = 1,
   Dcrs = 0,
   Ddes = 0,
-  Dsub = 1,
+  Dsub = 0,
   Dcar = 0,
   Dfig = 0
 )
