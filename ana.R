@@ -39,6 +39,8 @@ battle <-
     
     niter = 10000
   ){
+    
+  require(ggplot2)
 
   res <- character()
   rd <- numeric(0)
@@ -530,44 +532,57 @@ battle <-
     
   }
   
-  df <- data.frame(result = res, remain_def = rd, remain_att = ra)
-  
-  Result <- res
-  x<- (round(table(Result)/100,1))
+  x<- (round(table(res)/100,1))
   print(x)
   
+
+  
   cat('\nAttacker Units Remaining (% prob >=)\n')
-  x<-rev(round(cumsum(rev(table(df$remain_att)/length(df$result)*100)),1))
+  x<-rev(round(cumsum(rev(table(ra)/length(res)*100)),1))
   print(x)
   
   cat('\nDefender Units Remaining (% prob >=)\n')
-  x<-rev(round(cumsum(rev(table(df$remain_def)/length(df$result)*100)),1))
+  x<-rev(round(cumsum(rev(table(rd)/length(res)*100)),1))
   print(x)
+  
+  
+  df <- data.frame(side = c(rep('Attacker',length(ra)), rep('Defender',length(rd))) , remain = c(ra,rd))
+  
+  p<-
+    ggplot(data=df)+
+    geom_histogram(aes(x=remain),binwidth = .5, bins = max(df$remain))+
+    scale_x_continuous(breaks=0:max(df$remain))+
+    xlab('Remaining Units')+
+    facet_grid(side~ ., scales = 'free_y',space = 'free_y')+
+    theme_bw()
+  
+  return(p)
   }
 
 
 #land/air
 battle(
-  Ainf = 1,
+  Ainf = 6,
   Aart = 0,
-  Atnk = 0,
-  Afig = 4,
-  Abom = 0,
+  Atnk = 1,
+  Afig = 0,
+  Abom = 1,
   
   #amphibious
-  Absh_bbard = 0,
-  Acrs_bbard = 0,
+  Absh_bbard = 1,
+  Acrs_bbard = 1,
   
   #attacker sacrifice planes to take land
   sacrifice.planes = T,
   
-  Dinf = 7,
+  Dinf = 6,
   Dart = 0,
   Dtnk = 0,
-  Dfig = 0,
-  Dbom = 0,
-  Daa = 2
+  Dfig = 2,
+  Dbom = 2,
+  Daa = 1
 )
+
 
 
 #sea
@@ -575,17 +590,18 @@ battle(
   Absh = 0,
   Acrs = 0,
   Ades = 0,
-  Asub = 0,
+  Asub = 2,
   Acar = 0,
-  Afig = 2,
-  Abom = 1,
+  Afig = 4,
+  Abom =0,
   sacrifice.planes = F,
   
   Dbsh = 1,
   Dcrs = 0,
-  Ddes = 0,
-  Dsub = 0,
-  Dcar = 0,
-  Dfig = 0
+  Ddes = 2, 
+  Dsub = 1,
+  Dcar = 1,
+  Dfig = 1
 )
-      
+
+
