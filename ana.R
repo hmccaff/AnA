@@ -548,12 +548,15 @@ battle <-
   
   df <- data.frame(side = c(rep('Attacker',length(ra)), rep('Defender',length(rd))) , remain = c(ra,rd))
   
+  
   p<-
-    ggplot(data=df)+
+    ggplot(data=df[df$remain > 0,])+
     geom_histogram(aes(x=remain),binwidth = .5, bins = max(df$remain))+
-    scale_x_continuous(breaks=0:max(df$remain))+
+    scale_x_continuous(breaks=1:max(df$remain))+
     xlab('Remaining Units')+
-    facet_grid(side~ ., scales = 'free_y',space = 'free_y')+
+    ylab('count')+
+    facet_wrap(side~ .,nrow=1,ncol=2)+
+    ggtitle('Assuming win or stalemate')+
     theme_bw()
   
   return(p)
@@ -562,10 +565,10 @@ battle <-
 
 #land/air
 battle(
-  Ainf = 6,
+  Ainf = 2,
   Aart = 0,
-  Atnk = 1,
-  Afig = 0,
+  Atnk = 2,
+  Afig = 2,
   Abom = 1,
   
   #amphibious
@@ -573,13 +576,13 @@ battle(
   Acrs_bbard = 1,
   
   #attacker sacrifice planes to take land
-  sacrifice.planes = T,
+  sacrifice.planes = F,
   
-  Dinf = 6,
-  Dart = 0,
-  Dtnk = 0,
-  Dfig = 2,
-  Dbom = 2,
+  Dinf = 4,
+  Dart = 1,
+  Dtnk = 1,
+  Dfig = 0,
+  Dbom = 0,
   Daa = 1
 )
 
@@ -587,19 +590,19 @@ battle(
 
 #sea
 battle(  
-  Absh = 0,
+  Absh = 1,
   Acrs = 0,
-  Ades = 0,
-  Asub = 2,
+  Ades = 2,
+  Asub = 0,
   Acar = 0,
-  Afig = 4,
-  Abom =0,
+  Afig = 0,
+  Abom =1,
   sacrifice.planes = F,
   
   Dbsh = 1,
-  Dcrs = 0,
-  Ddes = 2, 
-  Dsub = 1,
+  Dcrs = 1,
+  Ddes = 1, 
+  Dsub = 0,
   Dcar = 1,
   Dfig = 1
 )
